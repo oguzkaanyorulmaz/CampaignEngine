@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile
     container_name: campaignengine-client
     ports:
-      - "5173:80"
+      - "2000:80"
     depends_on:
       - campaignengine-api
     restart: always
