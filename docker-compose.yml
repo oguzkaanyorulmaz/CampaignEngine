@@ -1,0 +1,31 @@
+services:
+  campaignengine-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: campaignengine-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__FraudGuardConnection=Server=host.docker.internal,1433;Database=FraudGuard;User Id=sa;Password=FraudGuard2026_!;TrustServerCertificate=True;Application Name=CampaignEngine;
+      - ConnectionStrings__CampaignConnection=Data Source=/app/data/campaignengine.db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - campaignengine_data:/app/data
+    restart: always
+
+  campaignengine-client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    container_name: campaignengine-client
+    ports:
+      - "5173:80"
+    depends_on:
+      - campaignengine-api
+    restart: always
+
+volumes:
+  campaignengine_data:
