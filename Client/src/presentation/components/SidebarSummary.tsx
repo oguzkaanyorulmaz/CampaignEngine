@@ -15,28 +15,28 @@ export const SidebarSummary: React.FC<SidebarProps> = ({
   totalBalance, totalCreditLimit, accountCount, cardCount, activeView, onSelectView,
 }) => (
   <div className="sidebar-stack">
-    {/* Hesaplarım Box */}
+    {/* HesaplarÄ±m Box */}
     <div
       className={`summary-card ${activeView === 'accounts' ? 'active-card' : ''}`}
       onClick={() => onSelectView('accounts')}
       style={{ cursor: 'pointer' }}
     >
-      <div className="summary-card-title">Hesaplarım ({accountCount || 2})</div>
+      <div className="summary-card-title">HesaplarÄ±m ({accountCount || 2})</div>
       <div className="summary-card-row">
         <span className="summary-card-label">Toplam Bakiye</span>
         <span className="summary-card-val">{fmt(totalBalance)} TL</span>
       </div>
     </div>
 
-    {/* Kredi Kartlarım Box */}
+    {/* Kredi KartlarÄ±m Box */}
     <div
       className={`summary-card ${activeView === 'cards' ? 'active-card' : ''}`}
       onClick={() => onSelectView('cards')}
       style={{ cursor: 'pointer' }}
     >
-      <div className="summary-card-title">Kredi Kartlarım ({cardCount})</div>
+      <div className="summary-card-title">Kredi KartlarÄ±m ({cardCount})</div>
       <div className="summary-card-row">
-        <span className="summary-card-label">Kullanılabilir Limit</span>
+        <span className="summary-card-label">KullanÄ±labilir Limit</span>
         <span className="summary-card-val">{fmt(totalCreditLimit)} TL</span>
       </div>
     </div>

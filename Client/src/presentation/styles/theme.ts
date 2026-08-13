@@ -1,7 +1,7 @@
-// VakıfBank / CampaignGuard Theme — FraudGuard projesinden esinlenilmiştir
+// VakÄ±fBank / CampaignGuard Theme â€” FraudGuard projesinden esinlenilmiÅŸtir
 export const theme = {
   colors: {
-    primary: '#FDBB30',        // VakıfBank Sarısı
+    primary: '#FDBB30',        // VakÄ±fBank SarÄ±sÄ±
     primaryHover: '#E5A520',
     black: '#111111',
     white: '#FFFFFF',

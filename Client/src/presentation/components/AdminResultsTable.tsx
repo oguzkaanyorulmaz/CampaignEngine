@@ -7,12 +7,12 @@ interface Props {
 }
 
 const ruleIcons: Record<string, string> = {
-  'MARKET_15K': '🛒',
-  'FUEL_5K': '⛽',
-  'ONLINE_60': '💻',
-  'RESTAURANT_8K': '🍽️',
-  'INT_MILES': '✈️',
-  'INSTALLMENT_40': '💳',
+  'MARKET_15K': 'ğŸ›’',
+  'FUEL_5K': 'â›½',
+  'ONLINE_60': 'ğŸ’»',
+  'RESTAURANT_8K': 'ğŸ½ï¸',
+  'INT_MILES': 'âœˆï¸',
+  'INSTALLMENT_40': 'ğŸ’³',
 };
 
 export const AdminResultsTable: React.FC<Props> = ({ service }) => {
@@ -27,23 +27,23 @@ export const AdminResultsTable: React.FC<Props> = ({ service }) => {
   }, [service]);
 
   if (loading) {
-    return <div className="loading"><div className="spinner" /> Analiz sonuçları yükleniyor...</div>;
+    return <div className="loading"><div className="spinner" /> Analiz sonuÃ§larÄ± yÃ¼kleniyor...</div>;
   }
 
   return (
     <div className="admin-page">
       <div className="section-title" style={{ marginBottom: 16 }}>
-        📊 Müşteri Kampanya Analiz Sonuç Tablosu <span className="badge">{results.length} Müşteri</span>
+        ğŸ“Š MÃ¼ÅŸteri Kampanya Analiz SonuÃ§ Tablosu <span className="badge">{results.length} MÃ¼ÅŸteri</span>
       </div>
 
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
             <tr>
-              <th>Müşteri ID</th>
-              <th>Müşteri Adı</th>
-              <th>Harcama Analiz Özeti</th>
-              <th>Önerilen Kampanya</th>
+              <th>MÃ¼ÅŸteri ID</th>
+              <th>MÃ¼ÅŸteri AdÄ±</th>
+              <th>Harcama Analiz Ã–zeti</th>
+              <th>Ã–nerilen Kampanya</th>
             </tr>
           </thead>
           <tbody>
@@ -54,13 +54,13 @@ export const AdminResultsTable: React.FC<Props> = ({ service }) => {
                 <td style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>{r.spendAnalysisSummary}</td>
                 <td>
                   <span className="admin-campaign-badge">
-                    {ruleIcons[r.ruleCode] || '🎁'} {r.recommendedCampaignTitle}
+                    {ruleIcons[r.ruleCode] || 'ğŸ'} {r.recommendedCampaignTitle}
                   </span>
                 </td>
               </tr>
             ))}
             {results.length === 0 && (
-              <tr><td colSpan={4} className="empty-state">Henüz analiz sonucu bulunamadı.</td></tr>
+              <tr><td colSpan={4} className="empty-state">HenÃ¼z analiz sonucu bulunamadÄ±.</td></tr>
             )}
           </tbody>
         </table>

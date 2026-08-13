@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
           <rect width="40" height="40" rx="8" fill="#FDBB30" />
           <path d="M11 13L20 30L29 13H23L20 22L17 13H11Z" fill="#111111" />
         </svg>
-        VakýfBank <span>Campaign</span>
+        VakÄ±fBank <span>Campaign</span>
       </div>
 
       <nav style={{ display: "flex", gap: "8px" }}>
@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
           }}
           onClick={() => onTabChange("portal")}
         >
-          ?? Müþteri Portalý
+          ?? MÃ¼ÅŸteri PortalÄ±
         </button>
         <button
           style={{
@@ -62,13 +62,13 @@ export const Header: React.FC<HeaderProps> = ({
             <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#64748B" }}>Profil</span>
             <div className="user-avatar">??</div>
             <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#1A1D20", paddingRight: "6px" }}>
-              {customerName || "Giriþ Yapýldý"}
+              {customerName || "GiriÅŸ YapÄ±ldÄ±"}
             </span>
           </div>
         )}
 
         <button className="btn-logout-outline" onClick={onLogout}>
-          Güvenli Çýkýþ
+          GÃ¼venli Ã‡Ä±kÄ±ÅŸ
           <span className="btn-logout-icon"></span>
         </button>
       </div>
