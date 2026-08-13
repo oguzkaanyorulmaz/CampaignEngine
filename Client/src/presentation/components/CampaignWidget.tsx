@@ -20,10 +20,10 @@ export const CampaignWidget: React.FC<Props> = ({ recommendation, onJoin }) => {
 
   return (
     <div>
-      <div className="col-title">Kart AvantajlarÄ±</div>
+      <div className="col-title">Kart Avantajları</div>
 
       <div className="campaign-card-container">
-        {/* Soft Blue Illustration Banner (Exact VakÄ±fBank Credit Cards Illustration) */}
+        {/* Soft Blue Illustration Banner (Exact VakıfBank Credit Cards Illustration) */}
         <div className="campaign-banner-illustration">
           <div className="illustration-svg-wrap">
             <svg width="170" height="130" viewBox="0 0 200 150" fill="none">
@@ -42,21 +42,21 @@ export const CampaignWidget: React.FC<Props> = ({ recommendation, onJoin }) => {
 
         {/* Campaign Card Body */}
         <div className="campaign-card-content">
-          <div className="campaign-subtitle">Size Ã–zel</div>
+          <div className="campaign-subtitle">Size Özel</div>
 
           <div className="campaign-title-main">
-            {recommendation ? recommendation.title : 'KartÄ±nÄ±zla AyrÄ±calÄ±klÄ± AlÄ±ÅŸveriÅŸ'}
+            {recommendation ? recommendation.title : 'Kartınızla Ayrıcalıklı Alışveriş'}
           </div>
 
           <p className="campaign-desc-text">
             {recommendation
               ? recommendation.description
-              : 'Taksit fÄ±rsatlarÄ±, puan kazanÄ±mÄ± ve size Ã¶zel indirimlerle harcamalarÄ±nÄ±z avantaja dÃ¶nÃ¼ÅŸsÃ¼n.'}
+              : 'Taksit fırsatları, puan kazanımı ve size özel indirimlerle harcamalarınız avantaja dönüşsün.'}
           </p>
 
           {recommendation && (
             <div className="campaign-reason-box">
-              ğŸ“Š <strong>Analiz Ã–zeti:</strong> {recommendation.reason}
+              📊 <strong>Analiz Özeti:</strong> {recommendation.reason}
             </div>
           )}
 
@@ -66,11 +66,11 @@ export const CampaignWidget: React.FC<Props> = ({ recommendation, onJoin }) => {
               onClick={handleJoin}
               disabled={joined || loading}
             >
-              {loading ? 'â³ Ä°ÅŸleniyor...' : joined ? 'âœ… Kampanyaya KatÄ±ldÄ±nÄ±z' : 'Kampanyaya KatÄ±l'}
+              {loading ? '⏳ İşleniyor...' : joined ? '✅ Kampanyaya Katıldınız' : 'Kampanyaya Katıl'}
             </button>
           ) : (
             <button className="btn-campaign-action">
-              KampanyalarÄ± Ä°nceleyin
+              Kampanyaları İnceleyin
             </button>
           )}
         </div>

@@ -33,7 +33,7 @@ export const CardList: React.FC<CardListProps> = ({
         <button className="btn-new-card">+ Yeni Kart</button>
       </div>
 
-      {/* Kart Bilgileri YanÄ±nda / ÃœstÃ¼nde Durum UyarÄ± BannerlarÄ± */}
+      {/* Kart Bilgileri Yanında / Üstünde Durum Uyarı Bannerları */}
       {isCardBlocked && (
         <div style={{
           background: '#FEF2F2',
@@ -48,11 +48,11 @@ export const CardList: React.FC<CardListProps> = ({
           alignItems: 'center',
           gap: '10px'
         }}>
-          <span style={{ fontSize: '1.2rem' }}>ğŸš«</span>
+          <span style={{ fontSize: '1.2rem' }}>🚫</span>
           <div>
-            <div>KARTINIZ BLOKE EDÄ°LMÄ°ÅTÄ°R</div>
+            <div>KARTINIZ BLOKE EDİLMİŞTİR</div>
             <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#B91C1C', marginTop: '2px' }}>
-              GÃ¼venlik ÅŸÃ¼phesi nedeniyle kartÄ±nÄ±z bloke edilmiÅŸtir. Ä°ÅŸlem gerÃ§ekleÅŸtiremezsiniz.
+              Güvenlik şüphesi nedeniyle kartınız bloke edilmiştir. İşlem gerçekleştiremezsiniz.
             </div>
           </div>
         </div>
@@ -72,11 +72,11 @@ export const CardList: React.FC<CardListProps> = ({
           alignItems: 'center',
           gap: '10px'
         }}>
-          <span style={{ fontSize: '1.3rem', color: '#D97706' }}>âš ï¸</span>
+          <span style={{ fontSize: '1.3rem', color: '#D97706' }}>⚠️</span>
           <div>
-            <div>KARTINIZ GEÃ‡Ä°CÄ° OLARAK ASKIYA ALINMIÅTIR</div>
+            <div>KARTINIZ GEÇİCİ OLARAK ASKIYA ALINMIŞTIR</div>
             <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#B45309', marginTop: '2px' }}>
-              Frauda dÃ¼ÅŸen ÅŸÃ¼pheli iÅŸlem tespit edildi. LÃ¼tfen MÃ¼ÅŸteri Hizmetlerini ArayÄ±nÄ±z: <strong>444 0 724</strong>
+              Frauda düşen şüpheli işlem tespit edildi. Lütfen Müşteri Hizmetlerini Arayınız: <strong>444 0 724</strong>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@ export const CardList: React.FC<CardListProps> = ({
       {/* Modern Combobox (Dropdown Select) for Card Selection */}
       <div style={{ margin: '14px 0 20px 0' }}>
         <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.04em' }}>
-          Aktif Kredi KartÄ±nÄ± SeÃ§iniz ({cards.length} Kart TanÄ±mlÄ±)
+          Aktif Kredi Kartını Seçiniz ({cards.length} Kart Tanımlı)
         </label>
         <div style={{ position: 'relative' }}>
           <select
@@ -113,12 +113,12 @@ export const CardList: React.FC<CardListProps> = ({
               const cardSuspended = !cardBlocked && cardSuspicious;
 
               let statusSuffix = '';
-              if (cardBlocked) statusSuffix = ' [ğŸš« BLOKELÄ°]';
-              else if (cardSuspended) statusSuffix = ' [âš ï¸ ASKIYA ALINDI]';
+              if (cardBlocked) statusSuffix = ' [🚫 BLOKELİ]';
+              else if (cardSuspended) statusSuffix = ' [⚠️ ASKIYA ALINDI]';
 
               return (
                 <option key={card.creditCardId} value={card.creditCardId} style={{ padding: '10px', fontSize: '0.9rem', fontWeight: 700 }}>
-                  ğŸ’³ {maskCard(card.cardNumber)} â€¢ {fmt(card.availableLimit)} TL KullanÄ±labilir Limit {statusSuffix}
+                  💳 {maskCard(card.cardNumber)} • {fmt(card.availableLimit)} TL Kullanılabilir Limit {statusSuffix}
                 </option>
               );
             })}
@@ -126,12 +126,12 @@ export const CardList: React.FC<CardListProps> = ({
 
           {/* Custom Dropdown Arrow Icon */}
           <div style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', fontSize: '0.85rem', color: '#111111', fontWeight: 900 }}>
-            â–¼
+            ▼
           </div>
         </div>
       </div>
 
-      {/* Selected Card Details Box (VakÄ±fBank UI Bottom Box) */}
+      {/* Selected Card Details Box (VakıfBank UI Bottom Box) */}
       {selectedCard && (
         <div className="card-detail-box" style={{
           borderColor: isCardBlocked ? '#FCA5A5' : isCardSuspended ? '#FDE68A' : undefined
@@ -140,26 +140,26 @@ export const CardList: React.FC<CardListProps> = ({
             <span>Kart Listesi</span>
             {isCardBlocked && (
               <span style={{ color: '#DC2626', fontSize: '0.75rem', fontWeight: 900 }}>
-                ğŸš« KART BLOKE EDÄ°LMÄ°ÅTÄ°R
+                🚫 KART BLOKE EDİLMİŞTİR
               </span>
             )}
             {isCardSuspended && (
               <span style={{ color: '#D97706', fontSize: '0.75rem', fontWeight: 900 }}>
-                âš ï¸ KART ASKIYA ALINDI â€¢ MÃœÅTERÄ° HÄ°ZMETLERÄ°NÄ° ARAYINIZ (444 0 724)
+                ⚠️ KART ASKIYA ALINDI • MÜŞTERİ HİZMETLERİNİ ARAYINIZ (444 0 724)
               </span>
             )}
           </div>
 
           <div className="card-detail-grid">
             <div className="card-detail-field">
-              <span className="card-detail-field-label">Kart Sahibi / NumarasÄ±</span>
+              <span className="card-detail-field-label">Kart Sahibi / Numarası</span>
               <span className="card-detail-field-val" style={{ fontSize: '0.9rem', fontFamily: 'monospace' }}>
-                {customerName} â€¢ {maskCard(selectedCard.cardNumber)}
+                {customerName} • {maskCard(selectedCard.cardNumber)}
               </span>
             </div>
 
             <div className="card-detail-field">
-              <span className="card-detail-field-label">KullanÄ±labilir Limit</span>
+              <span className="card-detail-field-label">Kullanılabilir Limit</span>
               <span className="card-detail-field-val">{fmt(selectedCard.availableLimit)} TL</span>
             </div>
 
@@ -169,7 +169,7 @@ export const CardList: React.FC<CardListProps> = ({
             </div>
           </div>
 
-          <span className="btn-show-number">Kart numarasÄ±nÄ± gÃ¶ster</span>
+          <span className="btn-show-number">Kart numarasını göster</span>
         </div>
       )}
     </div>

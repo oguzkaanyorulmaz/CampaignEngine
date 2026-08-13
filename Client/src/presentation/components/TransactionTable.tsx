@@ -14,15 +14,15 @@ const formatDate = (d: string) => {
 
 const getCategoryIcon = (category: string) => {
   switch (category) {
-    case 'Market': return 'ğŸ›’';
-    case 'E-Ticaret': return 'ğŸŒ';
-    case 'AkaryakÄ±t': return 'â›½';
-    case 'Kuyumcu': return 'ğŸ’';
-    case 'Restoran': return 'ğŸ½ï¸';
-    case 'Seyahat': return 'âœˆï¸';
-    case 'Elektronik': return 'ğŸ“±';
-    case 'Giyim': return 'ğŸ‘”';
-    default: return 'ğŸ’³';
+    case 'Market': return '🛒';
+    case 'E-Ticaret': return '🌐';
+    case 'Akaryakıt': return '⛽';
+    case 'Kuyumcu': return '💎';
+    case 'Restoran': return '🍽️';
+    case 'Seyahat': return '✈️';
+    case 'Elektronik': return '📱';
+    case 'Giyim': return '👔';
+    default: return '💳';
   }
 };
 
@@ -40,8 +40,8 @@ const getBadge = (tx: TransactionDto) => {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '4px'
-      }} title={tx.fraudReason || 'ÅÃ¼pheli iÅŸlem'}>
-        âš ï¸ ÅÃ¼pheli Ä°ÅŸlem
+      }} title={tx.fraudReason || 'Şüpheli işlem'}>
+        ⚠️ Şüpheli İşlem
       </span>
     );
   }
@@ -59,7 +59,7 @@ const getBadge = (tx: TransactionDto) => {
         alignItems: 'center',
         gap: '4px'
       }}>
-        â†©ï¸ Ä°ade Ä°ÅŸlemi
+        ↩️ İade İşlemi
       </span>
     );
   }
@@ -76,14 +76,14 @@ const getBadge = (tx: TransactionDto) => {
       alignItems: 'center',
       gap: '4px'
     }}>
-      âœ… OnaylÄ±
+      ✅ Onaylı
     </span>
   );
 };
 
 export const TransactionTable: React.FC<Props> = ({ transactions }) => {
   if (transactions.length === 0) {
-    return <div className="empty-state">Bu kart iÃ§in henÃ¼z iÅŸlem bulunmuyor.</div>;
+    return <div className="empty-state">Bu kart için henüz işlem bulunmuyor.</div>;
   }
 
   return (
@@ -91,9 +91,9 @@ export const TransactionTable: React.FC<Props> = ({ transactions }) => {
       {/* Modern Header Section */}
       <div className="section-title" style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span>AlÄ±ÅŸveriÅŸ & Ä°ÅŸlem GeÃ§miÅŸi</span>
+          <span>Alışveriş & İşlem Geçmişi</span>
           <span style={{ background: '#F1F5F9', color: '#475569', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 800 }}>
-            {transactions.length} Ä°ÅŸlem
+            {transactions.length} İşlem
           </span>
         </div>
       </div>
@@ -141,11 +141,11 @@ export const TransactionTable: React.FC<Props> = ({ transactions }) => {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '3px', fontSize: '0.75rem', color: '#64748B', fontWeight: 500 }}>
                   <span>{tx.merchantCategory}</span>
-                  <span>â€¢</span>
+                  <span>•</span>
                   <span>{tx.country}</span>
-                  <span>â€¢</span>
-                  <span>{tx.isOnline ? 'ğŸŒ Online POS' : 'ğŸª Fiziksel POS'}</span>
-                  <span>â€¢</span>
+                  <span>•</span>
+                  <span>{tx.isOnline ? '🌐 Online POS' : '🏪 Fiziksel POS'}</span>
+                  <span>•</span>
                   <span>{formatDate(tx.transactionDate)}</span>
                 </div>
               </div>

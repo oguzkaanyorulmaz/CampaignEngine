@@ -11,10 +11,10 @@ export class DashboardRepository implements IDashboardRepository {
       return await res.json();
     } catch {
       return [
-        { customerId: 1, fullName: 'Arda GÃ¼ler' },
-        { customerId: 2, fullName: 'Hakan Ã‡alhanoÄŸlu' },
-        { customerId: 3, fullName: 'Kenan YÄ±ldÄ±z' },
-        { customerId: 1001, fullName: 'Ahmet YÄ±lmaz (Demo)' }
+        { customerId: 1, fullName: 'Arda Güler' },
+        { customerId: 2, fullName: 'Hakan Çalhanoğlu' },
+        { customerId: 3, fullName: 'Kenan Yıldız' },
+        { customerId: 1001, fullName: 'Ahmet Yılmaz (Demo)' }
       ];
     }
   }

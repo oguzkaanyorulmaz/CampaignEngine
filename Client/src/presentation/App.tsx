@@ -99,7 +99,7 @@ export const App: React.FC = () => {
 
       {activeTab === "portal" ? (
         loading ? (
-          <div className="loading-box">VakÄ±fBank MÃ¼ÅŸteri PortalÄ± YÃ¼kleniyor...</div>
+          <div className="loading-box">VakıfBank Müşteri Portalı Yükleniyor...</div>
         ) : dashboard ? (
           <div className="dashboard-container">
             <SidebarSummary
@@ -149,7 +149,7 @@ export const App: React.FC = () => {
             />
           </div>
         ) : (
-          <div className="empty-state">MÃ¼ÅŸteri verisi bulunamadÄ±.</div>
+          <div className="empty-state">Müşteri verisi bulunamadı.</div>
         )
       ) : (
         <AdminResultsTable service={service} />

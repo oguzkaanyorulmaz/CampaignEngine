@@ -31,7 +31,7 @@ export const AccountList: React.FC<AccountListProps> = ({
       {/* Modern Combobox (Dropdown Select) for Bank Account Selection */}
       <div style={{ margin: '14px 0 20px 0' }}>
         <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.04em' }}>
-          Aktif Banka HesabÄ±nÄ± SeÃ§iniz ({accounts.length} Hesap TanÄ±mlÄ±)
+          Aktif Banka Hesabını Seçiniz ({accounts.length} Hesap Tanımlı)
         </label>
         <div style={{ position: 'relative' }}>
           <select
@@ -55,14 +55,14 @@ export const AccountList: React.FC<AccountListProps> = ({
           >
             {accounts.map((acc) => (
               <option key={acc.accountId} value={acc.accountId} style={{ padding: '10px', fontSize: '0.9rem', fontWeight: 700 }}>
-                ğŸ¦ {acc.accountName} â€¢ {formatIban(acc.iban)} ({fmt(acc.balance)} TL Bakiye)
+                🏦 {acc.accountName} • {formatIban(acc.iban)} ({fmt(acc.balance)} TL Bakiye)
               </option>
             ))}
           </select>
 
           {/* Custom Dropdown Arrow Icon */}
           <div style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', fontSize: '0.85rem', color: '#111111', fontWeight: 900 }}>
-            â–¼
+            ▼
           </div>
         </div>
       </div>
@@ -70,13 +70,13 @@ export const AccountList: React.FC<AccountListProps> = ({
       {/* Selected Account Details Box */}
       {selectedAccount && (
         <div className="card-detail-box">
-          <div className="card-detail-header">Hesap DetaylarÄ±</div>
+          <div className="card-detail-header">Hesap Detayları</div>
 
           <div className="card-detail-grid">
             <div className="card-detail-field" style={{ gridColumn: 'span 2' }}>
               <span className="card-detail-field-label">Hesap Sahibi / IBAN</span>
               <span className="card-detail-field-val" style={{ fontSize: '0.88rem', fontFamily: 'monospace' }}>
-                {customerName} â€¢ {formatIban(selectedAccount.iban)}
+                {customerName} • {formatIban(selectedAccount.iban)}
               </span>
             </div>
 
@@ -87,7 +87,7 @@ export const AccountList: React.FC<AccountListProps> = ({
           </div>
 
           <span className="btn-show-number" onClick={() => navigator.clipboard.writeText(selectedAccount.iban)}>
-            ğŸ“‹ IBAN Kopyala
+            📋 IBAN Kopyala
           </span>
         </div>
       )}
