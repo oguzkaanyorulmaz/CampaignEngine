@@ -1,0 +1,24 @@
+# .NET / Visual Studio
+[Bb]in/
+[Oo]bj/
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.user
+[Tt]est[Rr]esult*
+appsettings.Development.json
+appsettings.Local.json
+
+# Node / Client
+Client/node_modules/
+Client/dist/
+Client/build/
+Client/.vite/
+Client/*.log
+
+# Operating System
+.DS_Store
+Thumbs.db
