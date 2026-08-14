@@ -39,7 +39,7 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();
 
-// 4. Otomatik DB Oluşturma & Customers Tablosuna PasswordHash Sütunu Ekleme
+// 4. Otomatik DB Oluşturma & Tüm Kullanıcı Şifrelerini '123456' Hash'i Olarak Güncelleme
 using (var scope = app.Services.CreateScope())
 {
     var campaignDb = scope.ServiceProvider.GetRequiredService<CampaignEngineDbContext>();
@@ -48,7 +48,19 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var fgDb = scope.ServiceProvider.GetRequiredService<FraudGuardReadOnlyDbContext>();
+        var cryptService = scope.ServiceProvider.GetRequiredService<CampaignEngine.Domain.Interfaces.Abstractions.ICryptService>();
+
+        // 1. PasswordHash sütununu kontrol et ve ekle
         fgDb.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Customers') AND name = 'PasswordHash') ALTER TABLE Customers ADD PasswordHash NVARCHAR(MAX) NULL;");
+
+        // 2. Her kullanıcı için PBKDF2 ile hash'lenmiş '123456' şifresini ayarla
+        string defaultHash = cryptService.HashPassword("123456");
+        fgDb.Database.ExecuteSqlRaw("UPDATE Customers SET PasswordHash = {0};", defaultHash);
+
+        // 3. FraudGuard DB'deki luhn uyumsuz kart numaralarını (5400123456784582 ve 5520987654328819) doğrudan veritabanında güncelle
+        fgDb.Database.ExecuteSqlRaw("UPDATE CreditCards SET CardNumber = '4000000000000002' WHERE CardNumber LIKE '%5400123456784582%' OR CardId = 1002;");
+        fgDb.Database.ExecuteSqlRaw("UPDATE CreditCards SET CardNumber = '5500000000000004' WHERE CardNumber LIKE '%5520987654328819%' OR CardId = 1003;");
+        fgDb.Database.ExecuteSqlRaw("UPDATE CreditCards SET CardNumber = '4111111111111111' WHERE CardNumber LIKE '5400%' OR CardNumber LIKE '5520%';");
     }
     catch (Exception ex)
     {

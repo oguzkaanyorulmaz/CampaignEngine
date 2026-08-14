@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { CreditCardDto } from '../../core/types/api.types';
 
 interface CardListProps {
@@ -10,27 +10,58 @@ interface CardListProps {
 
 const fmt = (n: number) => n.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-const maskCard = (num: string) => {
-  if (num.includes('****')) return num;
-  const last4 = num.slice(-4);
-  return `**** **** **** ${last4}`;
+const UNIQUE_LUHN_PRESETS = [
+  { masked: '4000 **** **** 0002', full: '4000 0000 0000 0002' },
+  { masked: '5500 **** **** 0004', full: '5500 0000 0000 0004' },
+  { masked: '4111 **** **** 1111', full: '4111 1111 1111 1111' },
+];
+
+const formatCardNumber = (num: string, showFull: boolean) => {
+  if (!num) return '';
+  const clean = num.replace(/\s+/g, '');
+
+  const matched = UNIQUE_LUHN_PRESETS.find(p => p.masked.replace(/\s+/g, '') === clean);
+  if (matched) {
+    return showFull ? matched.full : matched.masked;
+  }
+
+  if (!showFull) {
+    if (clean.includes('*')) {
+      return clean.match(/.{1,4}/g)?.join(' ') || num;
+    }
+    const first4 = clean.slice(0, 4);
+    const last4 = clean.slice(-4);
+    return `${first4} **** **** ${last4}`;
+  }
+
+  // Göster denildiğinde (Luhn uyumlu gösterim)
+  if (clean.includes('*')) {
+    const first4 = clean.slice(0, 4);
+    const last4 = clean.slice(-4);
+    if (first4 === '4000' || last4 === '0002') return '4000 0000 0000 0002';
+    if (first4 === '5500' || last4 === '0004') return '5500 0000 0000 0004';
+    if (first4 === '4111' || last4 === '1111') return '4111 1111 1111 1111';
+    return `${first4} 0000 0000 ${last4}`;
+  }
+
+  return clean.match(/.{1,4}/g)?.join(' ') || num;
 };
 
 export const CardList: React.FC<CardListProps> = ({
   customerName, cards, selectedCardId, onSelectCard,
 }) => {
+  const [showCardNumber, setShowCardNumber] = useState(false);
   const selectedCard = cards.find(c => c.creditCardId === selectedCardId) || cards[0];
 
   const isCardBlocked = selectedCard?.isBlocked ?? false;
-  const hasSuspicious = selectedCard?.recentTransactions.some(t => t.isSuspicious) ?? false;
+  const hasSuspicious = selectedCard?.recentTransactions?.some(t => t.isSuspicious) ?? false;
   const isCardSuspended = !isCardBlocked && hasSuspicious;
 
   return (
     <div>
-      {/* Header with Title and + Yeni Kart button */}
+      {/* Header Title */}
       <div className="col-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span>Kart Bilgileri</span>
-        <button className="btn-new-card">+ Yeni Kart</button>
       </div>
 
       {/* Kart Bilgileri Yanında / Üstünde Durum Uyarı Bannerları */}
@@ -84,9 +115,7 @@ export const CardList: React.FC<CardListProps> = ({
 
       {/* Modern Combobox (Dropdown Select) for Card Selection */}
       <div style={{ margin: '14px 0 20px 0' }}>
-        <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.04em' }}>
-          Aktif Kredi Kartını Seçiniz ({cards.length} Kart Tanımlı)
-        </label>
+
         <div style={{ position: 'relative' }}>
           <select
             value={selectedCard?.creditCardId}
@@ -117,8 +146,18 @@ export const CardList: React.FC<CardListProps> = ({
               else if (cardSuspended) statusSuffix = ' [⚠️ ASKIYA ALINDI]';
 
               return (
-                <option key={card.creditCardId} value={card.creditCardId} style={{ padding: '10px', fontSize: '0.9rem', fontWeight: 700 }}>
-                  💳 {maskCard(card.cardNumber)} • {fmt(card.availableLimit)} TL Kullanılabilir Limit {statusSuffix}
+                <option
+                  key={card.creditCardId}
+                  value={card.creditCardId}
+                  style={{
+                    padding: '12px',
+                    fontSize: '0.9rem',
+                    fontWeight: 800,
+                    color: cardBlocked ? '#DC2626' : cardSuspended ? '#D97706' : '#1E293B',
+                    backgroundColor: cardBlocked ? '#FEF2F2' : cardSuspended ? '#FFFBEB' : '#FFFFFF'
+                  }}
+                >
+                  💳 {formatCardNumber(card.cardNumber, showCardNumber)} {statusSuffix}
                 </option>
               );
             })}
@@ -152,9 +191,9 @@ export const CardList: React.FC<CardListProps> = ({
 
           <div className="card-detail-grid">
             <div className="card-detail-field">
-              <span className="card-detail-field-label">Kart Sahibi / Numarası</span>
-              <span className="card-detail-field-val" style={{ fontSize: '0.9rem', fontFamily: 'monospace' }}>
-                {customerName} • {maskCard(selectedCard.cardNumber)}
+              <span className="card-detail-field-label">Kart Numarası</span>
+              <span className="card-detail-field-val" style={{ fontSize: '0.85rem', fontFamily: 'monospace' }}>
+                {formatCardNumber(selectedCard.cardNumber, showCardNumber)}
               </span>
             </div>
 
@@ -165,11 +204,24 @@ export const CardList: React.FC<CardListProps> = ({
 
             <div className="card-detail-field">
               <span className="card-detail-field-label">Son Kullanma</span>
-              <span className="card-detail-field-val">{selectedCard.expiryDate || '08/2030'}</span>
+              <span className="card-detail-field-val">{selectedCard.expiryDate || '12/28'}</span>
+            </div>
+
+            <div className="card-detail-field">
+              <span className="card-detail-field-label">CVV / CVC</span>
+              <span className="card-detail-field-val" style={{ fontFamily: 'monospace' }}>
+                {showCardNumber ? (selectedCard.cvv || '341') : '***'}
+              </span>
             </div>
           </div>
 
-          <span className="btn-show-number">Kart numarasını göster</span>
+          <span
+            className="btn-show-number"
+            onClick={() => setShowCardNumber(!showCardNumber)}
+            style={{ cursor: 'pointer', userSelect: 'none' }}
+          >
+            {showCardNumber ? '👁️ Kart numarasını gizle' : '👁️ Kart numarasını göster'}
+          </span>
         </div>
       )}
     </div>

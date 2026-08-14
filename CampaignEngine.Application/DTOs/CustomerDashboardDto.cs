@@ -17,7 +17,11 @@ namespace CampaignEngine.Application.DTOs
         // Kredi Kartları ve İşlemleri
         public List<CreditCardDto> CreditCards { get; set; } = new();
         
-        // Sağ Panel - Size Özel Önerilen Kampanya
+        // Sağ Panel - Size Özel Önerilen Kampanya (Geriye uyumluluk için)
         public RecommendationDto? RecommendedCampaign { get; set; }
+
+        // Çoklu Kampanya Desteği: Aktif/Katılabileceğiniz & Kullandığınız Kampanyalar
+        public List<RecommendationDto> ActiveCampaigns { get; set; } = new();
+        public List<RecommendationDto> RedeemedCampaigns { get; set; } = new();
     }
 }

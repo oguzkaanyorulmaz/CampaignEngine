@@ -1,77 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface HeaderProps {
-  activeTab: "portal" | "admin";
-  onTabChange: (tab: "portal" | "admin") => void;
-  selectedCustomerId?: number;
-  onCustomerChange?: (id: number) => void;
   customerName?: string;
   onLogout: () => void;
-  service?: any;
 }
 
-export const Header: React.FC<HeaderProps> = ({
-  activeTab, onTabChange, customerName, onLogout,
-}) => {
+export const Header: React.FC<HeaderProps> = ({ customerName, onLogout }) => {
+  const [showConfirm, setShowConfirm] = useState(false);
+
   return (
-    <header className="header">
-      <div className="header-logo">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-          <rect width="40" height="40" rx="8" fill="#FDBB30" />
-          <path d="M11 13L20 30L29 13H23L20 22L17 13H11Z" fill="#111111" />
-        </svg>
-        VakıfBank <span>Campaign</span>
-      </div>
-
-      <nav style={{ display: "flex", gap: "8px" }}>
-        <button
-          style={{
-            padding: "8px 16px",
-            border: "none",
-            borderRadius: "20px",
-            fontSize: "0.82rem",
-            fontWeight: 700,
-            cursor: "pointer",
-            background: activeTab === "portal" ? "#FDBB30" : "transparent",
-            color: "#111111"
-          }}
-          onClick={() => onTabChange("portal")}
-        >
-          ?? Müşteri Portalı
-        </button>
-        <button
-          style={{
-            padding: "8px 16px",
-            border: "none",
-            borderRadius: "20px",
-            fontSize: "0.82rem",
-            fontWeight: 700,
-            cursor: "pointer",
-            background: activeTab === "admin" ? "#FDBB30" : "transparent",
-            color: "#111111"
-          }}
-          onClick={() => onTabChange("admin")}
-        >
-          ?? Admin Tablosu
-        </button>
-      </nav>
-
-      <div className="header-right">
-        {activeTab === "portal" && (
-          <div className="customer-select-wrap" style={{ cursor: "default" }}>
-            <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#64748B" }}>Profil</span>
-            <div className="user-avatar">??</div>
-            <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#1A1D20", paddingRight: "6px" }}>
-              {customerName || "Giriş Yapıldı"}
-            </span>
+    <>
+      <header className="fg-header">
+        <div className="fg-header-inner">
+          <div className="fg-logo-group">
+            <span className="fg-badge">CE</span>
+            <span className="fg-brand-title">CampaignEngine</span>
+            <span className="fg-brand-subtitle">VakıfBank Müşteri</span>
           </div>
-        )}
 
-        <button className="btn-logout-outline" onClick={onLogout}>
-          Güvenli Çıkış
-          <span className="btn-logout-icon"></span>
-        </button>
-      </div>
-    </header>
+          <div className="fg-header-right">
+            <div className="fg-user-pill">
+              <span>👤 {customerName || "Ahmet Yılmaz"}</span>
+            </div>
+            <button
+              onClick={() => setShowConfirm(true)}
+              className="fg-btn-logout"
+            >
+              Çıkış
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Çıkış Yap Onay Modalı */}
+      {showConfirm && (
+        <div className="modal-overlay">
+          <div className="modal-card">
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#DC2626", marginBottom: "12px" }}>
+              <span style={{ fontSize: "20px" }}>⚠️</span>
+              <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#111" }}>Oturumu Kapat</h3>
+            </div>
+            <p style={{ fontSize: "13px", color: "#718096", marginBottom: "20px" }}>
+              Hesabınızdan çıkış yapmak istediğinize emin misiniz?
+            </p>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="btn-outline"
+                style={{ padding: "8px 16px", fontSize: "12px" }}
+              >
+                Vazgeç
+              </button>
+              <button
+                onClick={() => {
+                  setShowConfirm(false);
+                  onLogout();
+                }}
+                className="btn-black"
+                style={{ background: "#DC2626", borderColor: "#DC2626", padding: "8px 16px", fontSize: "12px" }}
+              >
+                Çıkış Yap
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

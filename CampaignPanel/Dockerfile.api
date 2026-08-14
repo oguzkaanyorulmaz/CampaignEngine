@@ -1,0 +1,24 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy csproj files and restore
+COPY ["CampaignPanel.API/CampaignPanel.API.csproj", "CampaignPanel.API/"]
+COPY ["CampaignPanel.Application/CampaignPanel.Application.csproj", "CampaignPanel.Application/"]
+COPY ["CampaignPanel.Domain/CampaignPanel.Domain.csproj", "CampaignPanel.Domain/"]
+COPY ["CampaignPanel.Infrastructure/CampaignPanel.Infrastructure.csproj", "CampaignPanel.Infrastructure/"]
+
+RUN dotnet restore "CampaignPanel.API/CampaignPanel.API.csproj"
+
+# Copy full source and publish
+COPY . .
+WORKDIR "/src/CampaignPanel.API"
+RUN dotnet publish "CampaignPanel.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+
+ENTRYPOINT ["dotnet", "CampaignPanel.API.dll"]

@@ -8,7 +8,6 @@ import { CardList } from "./components/CardList";
 import { AccountList } from "./components/AccountList";
 import { TransactionTable } from "./components/TransactionTable";
 import { CampaignWidget } from "./components/CampaignWidget";
-import { AdminResultsTable } from "./components/AdminResultsTable";
 import { LoginPage } from "./components/auth/LoginPage";
 
 const repo = new DashboardRepository();
@@ -26,7 +25,6 @@ export const App: React.FC = () => {
     return localStorage.getItem("customerName") || "";
   });
 
-  const [activeTab, setActiveTab] = useState<"portal" | "admin">("portal");
   const [activeView, setActiveView] = useState<"cards" | "accounts">("cards");
   const [dashboard, setDashboard] = useState<CustomerDashboardDto | null>(null);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
@@ -50,7 +48,7 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn || activeTab !== "portal") return;
+    if (!isLoggedIn) return;
     setLoading(true);
     service.loadDashboard(customerId)
       .then((data) => {
@@ -68,7 +66,7 @@ export const App: React.FC = () => {
       })
       .catch(() => setDashboard(null))
       .finally(() => setLoading(false));
-  }, [customerId, activeTab, isLoggedIn]);
+  }, [customerId, isLoggedIn]);
 
   const selectedCard = useMemo(
     () => dashboard?.creditCards.find((c) => c.creditCardId === selectedCardId) ?? null,
@@ -91,68 +89,72 @@ export const App: React.FC = () => {
   return (
     <>
       <Header
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
         customerName={dashboard?.customerName || customerName}
         onLogout={handleLogout}
       />
 
-      {activeTab === "portal" ? (
-        loading ? (
-          <div className="loading-box">VakıfBank Müşteri Portalı Yükleniyor...</div>
-        ) : dashboard ? (
-          <div className="dashboard-container">
-            <SidebarSummary
-              totalBalance={dashboard.totalAccountBalance}
-              totalCreditLimit={dashboard.totalCreditCardAvailableLimit}
-              accountCount={dashboard.bankAccounts.length}
-              cardCount={dashboard.creditCards.length}
-              activeView={activeView}
-              onSelectView={setActiveView}
-            />
+      {loading ? (
+        <div className="loading-box">VakıfBank Müşteri Portalı Yükleniyor...</div>
+      ) : dashboard ? (
+        <div className="dashboard-container">
+          <SidebarSummary
+            totalBalance={dashboard.totalAccountBalance}
+            totalCreditLimit={dashboard.totalCreditCardAvailableLimit}
+            accountCount={dashboard.bankAccounts.length}
+            cardCount={dashboard.creditCards.length}
+            activeView={activeView}
+            onSelectView={setActiveView}
+          />
 
-            <main>
-              {activeView === "cards" ? (
-                <>
-                  <CardList
-                    customerName={dashboard.customerName || customerName}
-                    cards={dashboard.creditCards}
-                    selectedCardId={selectedCardId}
-                    onSelectCard={setSelectedCardId}
-                  />
-                  {selectedCard && (
-                    <div className="txn-section">
-                      <TransactionTable transactions={selectedCard.recentTransactions} />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  <AccountList
-                    customerName={dashboard.customerName || customerName}
-                    accounts={dashboard.bankAccounts}
-                    selectedAccountId={selectedAccountId}
-                    onSelectAccount={setSelectedAccountId}
-                  />
-                  {selectedAccount && (
-                    <div className="txn-section">
-                      <TransactionTable transactions={selectedAccount.recentTransactions} />
-                    </div>
-                  )}
-                </>
-              )}
-            </main>
+          <main>
+            {activeView === "cards" ? (
+              <>
+                <CardList
+                  customerName={dashboard.customerName || customerName}
+                  cards={dashboard.creditCards}
+                  selectedCardId={selectedCardId}
+                  onSelectCard={setSelectedCardId}
+                />
+                {selectedCard && (
+                  <div className="txn-section">
+                    <TransactionTable
+                      transactions={selectedCard.recentTransactions}
+                      currentBalance={selectedCard.availableLimit}
+                      balanceLabel="Kullanılabilir Limit"
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <AccountList
+                  customerName={dashboard.customerName || customerName}
+                  accounts={dashboard.bankAccounts}
+                  selectedAccountId={selectedAccountId}
+                  onSelectAccount={setSelectedAccountId}
+                />
+                {selectedAccount && (
+                  <div className="txn-section">
+                    <TransactionTable
+                      transactions={selectedAccount.recentTransactions}
+                      currentBalance={selectedAccount.balance}
+                      balanceLabel="Kalan Bakiye"
+                    />
+                  </div>
+                )}
+              </>
+            )}
+          </main>
 
-            <CampaignWidget
-              recommendation={dashboard.recommendedCampaign}
-              onJoin={handleJoin}
-            />
-          </div>
-        ) : (
-          <div className="empty-state">Müşteri verisi bulunamadı.</div>
-        )
+          <CampaignWidget
+            recommendation={dashboard.recommendedCampaign}
+            activeCampaigns={dashboard.activeCampaigns}
+            redeemedCampaigns={dashboard.redeemedCampaigns}
+            onJoin={handleJoin}
+          />
+        </div>
       ) : (
-        <AdminResultsTable service={service} />
+        <div className="empty-state">Müşteri verisi bulunamadı.</div>
       )}
     </>
   );

@@ -27,5 +27,31 @@ services:
       - campaignengine-api
     restart: always
 
+  campaignpanel-api:
+    build:
+      context: ./CampaignPanel
+      dockerfile: Dockerfile.api
+    container_name: campaignpanel-api
+    ports:
+      - "1001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__FraudGuardConnection=Server=host.docker.internal,1433;Database=FraudGuard;User Id=sa;Password=FraudGuard2026_!;TrustServerCertificate=True;Application Name=CampaignPanel;
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+
+  campaignpanel-client:
+    build:
+      context: ./CampaignPanel/Client
+      dockerfile: Dockerfile
+    container_name: campaignpanel-client
+    ports:
+      - "1000:80"
+    depends_on:
+      - campaignpanel-api
+    restart: always
+
 volumes:
   campaignengine_data:
+

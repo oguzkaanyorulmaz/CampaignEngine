@@ -15,6 +15,8 @@ export interface TransactionDto {
   transactionDate: string;
   isOnline: boolean;
   isRefund: boolean;
+  isDeclined?: boolean;
+  declineReason?: string | null;
   isSuspicious: boolean;
   fraudReason: string | null;
 }
@@ -25,6 +27,7 @@ export interface CreditCardDto {
   expiryDate: string;
   cardLimit: number;
   availableLimit: number;
+  cvv?: string;
   isBlocked?: boolean;
   recentTransactions: TransactionDto[];
 }
@@ -32,6 +35,9 @@ export interface CreditCardDto {
 export interface BankAccountDto {
   accountId: number;
   accountName: string;
+  cardNumber?: string;
+  expiryDate?: string;
+  cvv?: string;
   iban: string;
   balance: number;
   recentTransactions: TransactionDto[];
@@ -45,6 +51,8 @@ export interface RecommendationDto {
   reason: string;
   priorityScore: number;
   isJoined: boolean;
+  isRedeemed?: boolean;
+  totalSavedAmount?: number;
 }
 
 export interface CustomerDashboardDto {
@@ -55,6 +63,8 @@ export interface CustomerDashboardDto {
   bankAccounts: BankAccountDto[];
   creditCards: CreditCardDto[];
   recommendedCampaign: RecommendationDto | null;
+  activeCampaigns?: RecommendationDto[];
+  redeemedCampaigns?: RecommendationDto[];
 }
 
 export interface CustomerRecommendationResultDto {

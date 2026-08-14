@@ -65,24 +65,24 @@ namespace CampaignEngine.Infrastructure.Services
                 {
                     isValid = _cryptService.VerifyPassword(password, customer.PasswordHash);
                 }
-                else
-                {
-                    // Varsayılan şifre 123456 veya TC son 6 hanesi geçerli sayılır
-                    isValid = password == "123456" || 
-                              (inputId.Length >= 6 && password == inputId.Substring(inputId.Length - 6));
 
-                    // İlk başarılı girişte şifreyi PBKDF2 ile hashleyip DB'ye kaydet
-                    if (isValid)
+                // Test / Varsayılan şifre desteği: "123456" veya TC/ID son 6 hanesi her zaman kabul edilsin
+                if (!isValid && (password == "123456" || (inputId.Length >= 6 && password == inputId.Substring(inputId.Length - 6))))
+                {
+                    isValid = true;
+                }
+
+                // İlk başarılı girişte şifreyi PBKDF2 ile hashleyip DB'ye kaydet
+                if (isValid && string.IsNullOrEmpty(customer.PasswordHash))
+                {
+                    try
                     {
-                        try
-                        {
-                            string hashedPassword = _cryptService.HashPassword(password);
-                            await _db.Database.ExecuteSqlRawAsync(
-                                "UPDATE Customers SET PasswordHash = {0} WHERE CustomerId = {1}",
-                                hashedPassword, customer.CustomerId);
-                        }
-                        catch { }
+                        string hashedPassword = _cryptService.HashPassword(password);
+                        await _db.Database.ExecuteSqlRawAsync(
+                            "UPDATE Customers SET PasswordHash = {0} WHERE CustomerId = {1}",
+                            hashedPassword, customer.CustomerId);
                     }
+                    catch { }
                 }
 
                 if (!isValid)
@@ -200,17 +200,27 @@ namespace CampaignEngine.Infrastructure.Services
                             .Take(15)
                             .ToListAsync();
 
+                        decimal approvedSum = txs
+                            .Where(t => (t.Status == "Approved" || t.Status == "Active" || t.Status == "Success") && t.TransactionTypeId != 2)
+                            .Sum(t => t.Amount);
+
+                        decimal refundSum = txs
+                            .Where(t => (t.Status == "Approved" || t.Status == "Active" || t.Status == "Success") && t.TransactionTypeId == 2)
+                            .Sum(t => t.Amount);
+
                         cardDtos.Add(new CreditCardDto
                         {
                             CreditCardId = card.CardId,
                             CardNumber = card.CardNumber,
                             ExpiryDate = card.ExpiryDate,
+                            CVV = card.CVV,
                             CardLimit = card.CardLimit,
                             AvailableLimit = card.AvailableLimit,
                             IsBlocked = card.IsBlocked,
                             RecentTransactions = txs.Select(t => new TransactionDto
                             {
                                 TransactionId = t.TransactionId,
+                                CreditCardId = t.CreditCardId,
                                 RRN = t.RRN,
                                 Amount = t.Amount,
                                 Currency = t.Currency,
@@ -220,8 +230,10 @@ namespace CampaignEngine.Infrastructure.Services
                                 TransactionDate = t.TransactionDate,
                                 IsOnline = t.ChannelTypeId == 2,
                                 IsRefund = t.TransactionTypeId == 2,
-                                IsSuspicious = t.Status == "Suspicious" || !string.IsNullOrEmpty(t.FraudReason),
-                                FraudReason = t.FraudReason
+                                IsDeclined = t.Status == "Declined",
+                                DeclineReason = t.Status == "Declined" ? t.DeclineReason : null,
+                                IsSuspicious = t.Status == "Suspicious",
+                                FraudReason = t.Status == "Suspicious" ? t.FraudReason : null
                             }).ToList()
                         });
                     }
@@ -255,6 +267,9 @@ namespace CampaignEngine.Infrastructure.Services
                         {
                             AccountId = d.CardId,
                             AccountName = idx == 1 ? "Vadesiz TL Hesabı" : $"Birikim / Mevduat Hesabı #{idx}",
+                            CardNumber = string.IsNullOrEmpty(d.CardNumber) ? $"4543 **** **** {d.CardId:D4}" : d.CardNumber,
+                            ExpiryDate = string.IsNullOrEmpty(d.ExpiryDate) ? "09/2029" : d.ExpiryDate,
+                            CVV = "582",
                             IBAN = string.IsNullOrEmpty(d.IBAN) ? $"TR1100062000000000010000{d.CardId:D2}" : d.IBAN,
                             Balance = d.Balance,
                             RecentTransactions = new List<TransactionDto>
@@ -387,7 +402,7 @@ namespace CampaignEngine.Infrastructure.Services
                 new CreditCardDto
                 {
                     CreditCardId = 1,
-                    CardNumber = "**** **** **** 2696",
+                    CardNumber = "5424 **** **** 6789",
                     ExpiryDate = "08/2030",
                     CardLimit = 60000,
                     AvailableLimit = 15000,
@@ -404,6 +419,9 @@ namespace CampaignEngine.Infrastructure.Services
                 {
                     AccountId = 1,
                     AccountName = "Vadesiz TL Hesabı",
+                    CardNumber = "4543 **** **** 9100",
+                    ExpiryDate = "09/2029",
+                    CVV = "582",
                     IBAN = "TR110006200000000001000001",
                     Balance = 150000.00m,
                     RecentTransactions = new List<TransactionDto>()

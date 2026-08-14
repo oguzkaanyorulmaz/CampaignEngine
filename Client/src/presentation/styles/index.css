@@ -2,24 +2,22 @@
 
 :root {
   --primary: #FDBB30;
-  /* VakıfBank Sarısı */
   --primary-hover: #E5A520;
   --black: #111111;
   --white: #FFFFFF;
-  --bg: #EAECEF;
-  /* SS'teki yumuşak gri-mavi arka plan */
+  --bg: #F8FAFC;
   --card: #FFFFFF;
-  --border: #D1D5DB;
-  --text-dark: #2B2D31;
-  --text-muted: #848A95;
+  --border: #E4E7EB;
+  --text-dark: #1A1D20;
+  --text-muted: #718096;
   --success: #16A34A;
   --danger: #DC2626;
   --refund: #7C3AED;
   --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 8px;
-  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -41,36 +39,165 @@ body,
 }
 
 /* ═══════════════════════════════
-   HEADER (Üst Bar)
+   FRAUDGUARD SIGNATURE HEADER
    ═══════════════════════════════ */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  height: 70px;
-  background: var(--white);
-  border-bottom: 1px solid #E2E8F0;
-  box-shadow: var(--shadow-sm);
+.fg-header {
+  width: 100%;
+  background: var(--primary);
+  border-bottom: 1px solid rgba(229, 165, 32, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
-.header-logo {
+.fg-header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fg-logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.fg-badge {
+  background: var(--black);
+  color: var(--primary);
+  font-weight: 900;
+  font-style: italic;
+  font-size: 16px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: -0.5px;
+  box-shadow: var(--shadow-sm);
+}
+
+.fg-brand-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--black);
+  letter-spacing: -0.5px;
+}
+
+.fg-brand-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(17, 17, 17, 0.7);
+  background: rgba(17, 17, 17, 0.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 4px;
+}
+
+.fg-header-right {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-weight: 900;
-  font-size: 1.35rem;
-  color: var(--text-dark);
-  letter-spacing: -0.03em;
-  font-style: italic;
 }
 
-.header-logo span {
-  color: var(--primary);
-  font-style: normal;
+.fg-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(17, 17, 17, 0.1);
+  color: var(--black);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(17, 17, 17, 0.15);
+}
+
+.fg-btn-logout {
+  background: var(--black);
+  color: var(--white);
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.fg-btn-logout:hover {
+  background: #000000;
+  transform: translateY(-1px);
+}
+
+/* Modal Overlay & Card */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+  padding: 24px;
+  width: 400px;
+  max-width: 90%;
+  border: 1px solid var(--border);
+  animation: slideUp 0.25s ease;
+}
+
+.btn-black {
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline {
+  background: var(--white);
+  color: var(--text-dark);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.row-enter {
+  animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .header-right {
@@ -145,10 +272,11 @@ body,
    ═══════════════════════════════ */
 .dashboard-container {
   display: grid;
-  grid-template-columns: 260px 1fr 380px;
+  grid-template-columns: 280px 1fr 400px;
   gap: 24px;
   padding: 28px 40px;
-  max-width: 1520px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -296,15 +424,17 @@ body,
 
 .card-detail-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-columns: 2.4fr 1.2fr 1fr 0.8fr;
   gap: 16px;
   margin-bottom: 16px;
+  align-items: flex-start;
 }
 
 .card-detail-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .card-detail-field-label {
@@ -313,12 +443,16 @@ body,
   color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
 .card-detail-field-val {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 900;
   color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-show-number {
